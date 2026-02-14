@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everyday Surprise ✨</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --bg: #06060e;
+            --text: #ffffff;
+            --text-soft: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .animation-layer, .diya-row { display: none !important; }
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 0 0 8px 8px;
+            z-index: 9999;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: top 0.3s;
+        }
+        .skip-link:focus { top: 0; }
+
+        .app-container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .stars-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .star-dot {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            will-change: opacity;
+        }
+        .star-dot.twinkle-slow { animation: twinkle 4s ease-in-out infinite; }
+        .star-dot.twinkle-mid { animation: twinkle 2.5s ease-in-out infinite; }
+        .star-dot.twinkle-fast { animation: twinkle 1.5s ease-in-out infinite; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .gradient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+            transition: background 1.5s ease;
+        }
+        .orb-1 {
+            width: min(500px, 80vw);
+            height: min(500px, 80vw);
+            background: radial-gradient(circle, var(--primary), transparent 70%);
+            top: -15%;
+            right: -15%;
+            animation: orbFloat1 25s infinite ease-in-out;
+        }
+        .orb-2 {
+            width: min(400px, 70vw);
+            height: min(400px, 70vw);
+            background: radial-gradient(circle, var(--secondary), transparent 70%);
+            bottom: -10%;
+            left: -10%;
+            animation: orbFloat2 20s infinite ease-in-out;
+        }
+        .orb-3 {
+            width: min(300px, 50vw);
+            height: min(300px, 50vw);
+            background: radial-gradient(circle, var(--accent), transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: orbFloat3 18s infinite ease-in-out;
+            opacity: 0.15;
+        }
+
+        @keyframes orbFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-30px, 40px) scale(1.05); }
+            66% { transform: translate(20px, -20px) scale(0.95); }
+        }
+        @keyframes orbFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.08); }
+        }
+        @keyframes orbFloat3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-45%, -55%) scale(1.1); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 620px;
+            width: 100%;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 7vw, 4rem);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            background-size: 200% 200%;
+            line-height: 1.2;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+            text-align: center;
+            color: var(--text-soft);
+            margin-bottom: 2rem;
+            font-style: italic;
+            letter-spacing: 0.3px;
+        }
+
+        .today-banner {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .today-banner:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+            border-color: var(--primary);
+        }
+        .today-banner-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .today-banner-occasion {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.5rem;
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            padding: 4px;
+            border: 1px solid var(--glass-border);
+        }
+        .mode-tab {
+            flex: 1;
+            padding: 10px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            background: transparent;
+            color: var(--text-soft);
+            border: none;
+            border-radius: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .mode-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .mode-tab:not(.active):hover {
+            color: var(--text);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .form-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .input-group { margin-bottom: 1.5rem; }
+        .input-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-soft);
+            letter-spacing: 0.5px;
+        }
+        .label-icon { font-size: 1.1rem; }
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.05rem;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .input-field::placeholder { color: rgba(255,255,255,0.3); }
+        .input-field:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+        }
+        .input-field.error {
+            border-color: #ff4444;
+            box-shadow: 0 0 0 4px rgba(255,68,68,0.15);
+        }
+        .error-text {
+            font-size: 0.85rem;
+            color: #ff6b6b;
+            margin-top: 6px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.05rem;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text);
+            transition: all 0.3s ease;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6,9 12,15 18,9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            cursor: pointer;
+        }
+        .select-field:focus {
+            border-color: var(--primary);
+            background-color: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+        }
+        .select-field option { background: #1a1a2e; color: white; }
+
+        .textarea-field {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.05rem;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text);
+            transition: all 0.3s ease;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            max-height: 200px;
+        }
+        .textarea-field::placeholder { color: rgba(255,255,255,0.3); }
+        .textarea-field:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+        }
+        .char-counter {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            text-align: right;
+            margin-top: 4px;
+        }
+        .char-counter.warn { color: #ff6b6b; }
+
+        .primary-btn {
+            width: 100%;
+            padding: 1.1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .primary-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        .primary-btn:hover::after { transform: translateX(100%); }
+        .primary-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+        .primary-btn:active:not(:disabled) { transform: translateY(0); }
+        .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.85rem 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            background: transparent;
+            color: var(--text-soft);
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            color: var(--text);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .share-box {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 14px;
+            animation: slideUp 0.5s ease;
+        }
+        .share-box-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .share-link-row { display: flex; gap: 8px; }
+        .share-link-input {
+            flex: 1;
+            padding: 10px 14px;
+            font-family: 'Crimson Text', serif;
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--text);
+            outline: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .copy-btn {
+            padding: 10px 18px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover { opacity: 0.9; transform: scale(1.02); }
+        .copied-toast {
+            text-align: center;
+            margin-top: 8px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            color: #4ecdc4;
+            animation: fadeInToast 0.3s ease;
+        }
+        @keyframes fadeInToast {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Reveal Overlay */
+        .reveal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+        }
+        .reveal-envelope {
+            text-align: center;
+            animation: envelopePulse 1.5s ease-in-out infinite;
+        }
+        .reveal-envelope .envelope-icon {
+            font-size: 5rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        .reveal-envelope .reveal-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--text-soft);
+            letter-spacing: 2px;
+        }
+        @keyframes envelopePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .countdown-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: countPop 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-align: center;
+        }
+        @keyframes countPop {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Surprise */
+        .surprise-container {
+            animation: surpriseReveal 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes surpriseReveal {
+            from { opacity: 0; transform: scale(0.85) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .occasion-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50px;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+        .surprise-header {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.25;
+            background: linear-gradient(135deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--primary), var(--accent), transparent);
+            margin: 0 auto 1.5rem;
+            border-radius: 2px;
+        }
+        .surprise-message {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            line-height: 1.9;
+            text-align: center;
+            color: var(--text-soft);
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .custom-note {
+            margin: 1.5rem auto;
+            max-width: 450px;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-soft);
+            text-align: left;
+        }
+        .custom-note::before {
+            content: '\201C';
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            line-height: 0;
+            vertical-align: -0.6rem;
+            color: var(--accent);
+            opacity: 0.5;
+            margin-right: 4px;
+        }
+        .sender-tag {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--text-soft);
+            margin-top: 1rem;
+        }
+        .sender-tag .from-name { font-weight: 600; color: var(--accent); }
+        .surprise-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Animation layers */
+        .animation-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            overflow: hidden;
+        }
+        .heart-particle {
+            position: absolute;
+            font-size: 1.8rem;
+            will-change: transform, opacity;
+            animation: heartRise 5s ease-out forwards;
+        }
+        @keyframes heartRise {
+            0% { opacity: 0; transform: translateY(100vh) scale(0.5) rotate(0deg); }
+            10% { opacity: 0.9; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1) rotate(25deg); }
+        }
+        .confetti-piece {
+            position: absolute;
+            border-radius: 2px;
+            will-change: transform, opacity;
+            animation: confettiFall 4s ease-in forwards;
+        }
+        @keyframes confettiFall {
+            0% { opacity: 1; transform: translateY(-10vh) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(110vh) rotate(900deg) scale(0.3); }
+        }
+        .snowflake {
+            position: absolute;
+            color: white;
+            will-change: transform, opacity;
+            animation: snowDrift 6s linear forwards;
+        }
+        @keyframes snowDrift {
+            0% { opacity: 0; transform: translateY(-5vh) translateX(0) rotate(0deg); }
+            10% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateY(105vh) translateX(50px) rotate(360deg); }
+        }
+        .fw-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            will-change: transform, opacity;
+            animation: fwExplode 1.8s ease-out forwards;
+        }
+        @keyframes fwExplode {
+            0% { opacity: 1; transform: translate(0, 0) scale(1.5); }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+        }
+        .diya-row {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 3%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .diya-item {
+            font-size: 2.5rem;
+            animation: diyaGlow 2.5s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 8px rgba(255,165,0,0.6));
+        }
+        @keyframes diyaGlow {
+            0% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 8px rgba(255,165,0,0.4)); }
+            100% { transform: scale(1.1); filter: brightness(1.3) drop-shadow(0 0 16px rgba(255,165,0,0.8)); }
+        }
+        .sparkle-particle {
+            position: absolute;
+            will-change: transform, opacity;
+            animation: sparkleFloat 3s ease-out forwards;
+        }
+        @keyframes sparkleFloat {
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            20% { opacity: 1; transform: scale(1.2) rotate(90deg); }
+            100% { opacity: 0; transform: scale(0) rotate(360deg) translateY(-60px); }
+        }
+        .lantern-particle {
+            position: absolute;
+            font-size: 2rem;
+            will-change: transform, opacity;
+            animation: lanternFloat 8s ease-out forwards;
+        }
+        @keyframes lanternFloat {
+            0% { opacity: 0; transform: translateY(100vh) scale(0.8); }
+            15% { opacity: 0.9; }
+            100% { opacity: 0; transform: translateY(-20vh) translateX(30px) scale(0.6); }
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* AD OVERLAY                              */
+        /* ═══════════════════════════════════════ */
+        .ad-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.97);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: adFadeIn 0.4s ease;
+        }
+        @keyframes adFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .ad-container {
+            width: 90%;
+            max-width: 640px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .ad-video-wrapper {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .ad-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .ad-video-loader {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            color: var(--text-soft);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+        .ad-loader-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: adSpin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+        @keyframes adSpin {
+            to { transform: rotate(360deg); }
+        }
+        .ad-progress-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: -4px;
+        }
+        .ad-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 3px;
+            transition: width 0.3s linear;
+        }
+        .ad-bottom-row {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .ad-sponsor-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ad-sponsor-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .ad-sponsor-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .ad-sponsor-link:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+        .ad-skip-area {
+            display: flex;
+            align-items: center;
+        }
+        .ad-skip-timer {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 0.5px;
+            padding: 8px 16px;
+        }
+        .ad-skip-btn {
+            padding: 8px 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: adSkipAppear 0.3s ease;
+        }
+        .ad-skip-btn:hover {
+            background: rgba(255,255,255,0.18);
+            border-color: white;
+        }
+        @keyframes adSkipAppear {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .ad-preparing {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* ═══════════════════════════════════════ */
+        /* STATS PAGE                              */
+        /* ═══════════════════════════════════════ */
+        .stats-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .stats-container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        }
+        .stats-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .stat-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--text-soft);
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .stats-note {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.6;
+            text-align: center;
+        }
+        .stats-back-btn {
+            display: block;
+            margin: 2rem auto 0;
+            padding: 10px 24px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--text-soft);
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .stats-back-btn:hover {
+            border-color: var(--primary);
+            color: var(--text);
+        }
+        .stats-reset-btn {
+            display: block;
+            margin: 10px auto 0;
+            padding: 8px 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            color: #ff6b6b;
+            background: transparent;
+            border: 1px solid rgba(255,68,68,0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .stats-reset-btn:hover {
+            background: rgba(255,68,68,0.1);
+            border-color: #ff6b6b;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .form-container { padding: 1.8rem 1.3rem; }
+            .mode-tabs { flex-direction: column; }
+            .mode-tab { padding: 10px; }
+            .surprise-actions { flex-direction: column; align-items: center; }
+            .share-link-row { flex-direction: column; }
+            .ad-container { width: 95%; }
+            .ad-bottom-row { flex-direction: column; align-items: stretch; text-align: center; }
+            .ad-sponsor-info { justify-content: center; }
+            .ad-skip-area { justify-content: center; }
+        }
+        @media (min-width: 1200px) {
+            .content { max-width: 650px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } = React;
+
+        // ══════════════════════════════════════════
+        // THEME CONTEXT
+        // ══════════════════════════════════════════
+        const ThemeContext = createContext();
+        function ThemeProvider({ children }) {
+            const [theme, setTheme] = useState({ primary: '#667eea', secondary: '#764ba2', accent: '#f093fb' });
+            useEffect(() => {
+                document.documentElement.style.setProperty('--primary', theme.primary);
+                document.documentElement.style.setProperty('--secondary', theme.secondary);
+                document.documentElement.style.setProperty('--accent', theme.accent);
+            }, [theme]);
+            return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+        }
+        function useTheme() { return useContext(ThemeContext); }
+
+        // ══════════════════════════════════════════
+        // AD CONFIG CONTEXT
+        // ══════════════════════════════════════════
+        const AdContext = createContext();
+        function AdProvider({ children }) {
+            const [adConfig, setAdConfig] = useState(null);
+            const [adLoaded, setAdLoaded] = useState(false);
+
+            useEffect(() => {
+                fetch('./ad-config.json')
+                    .then(r => {
+                        if (!r.ok) throw new Error('No ad config');
+                        return r.json();
+                    })
+                    .then(data => {
+                        if (data && data.enabled && data.videoUrl) {
+                            setAdConfig(data);
+                        }
+                        setAdLoaded(true);
+                    })
+                    .catch(() => {
+                        setAdConfig(null);
+                        setAdLoaded(true);
+                    });
+            }, []);
+
+            return <AdContext.Provider value={{ adConfig, adLoaded }}>{children}</AdContext.Provider>;
+        }
+        function useAd() { return useContext(AdContext); }
+
+        // ══════════════════════════════════════════
+        // AD STATS (localStorage)
+        // ══════════════════════════════════════════
+        const AdStats = {
+            _getStats() {
+                try {
+                    const raw = localStorage.getItem('es_ad_stats');
+                    return raw ? JSON.parse(raw) : { views: 0, clicks: 0, firstView: null, lastView: null };
+                } catch { return { views: 0, clicks: 0, firstView: null, lastView: null }; }
+            },
+            _save(stats) {
+                try { localStorage.setItem('es_ad_stats', JSON.stringify(stats)); } catch {}
+            },
+            recordView() {
+                const stats = this._getStats();
+                stats.views++;
+                const now = new Date().toISOString();
+                if (!stats.firstView) stats.firstView = now;
+                stats.lastView = now;
+                this._save(stats);
+            },
+            recordClick() {
+                const stats = this._getStats();
+                stats.clicks++;
+                this._save(stats);
+            },
+            getStats() { return this._getStats(); },
+            reset() {
+                try { localStorage.removeItem('es_ad_stats'); } catch {}
+            }
+        };
+
+        // ══════════════════════════════════════════
+        // AD SESSION TRACKER (sessionStorage)
+        // ══════════════════════════════════════════
+        function hasSeenAdThisSession() {
+            try { return sessionStorage.getItem('es_ad_seen') === 'true'; } catch { return false; }
+        }
+        function markAdSeenThisSession() {
+            try { sessionStorage.setItem('es_ad_seen', 'true'); } catch {}
+        }
+
+        // ══════════════════════════════════════════
+        // OCCASION DATABASE
+        // ══════════════════════════════════════════
+        const fixedOccasions = {
+            '01-01': { name: "New Year's Day", animation: 'fireworks', colors: { primary: '#ffd700', secondary: '#ff6b6b', accent: '#4ecdc4' }, greeting: n => `Happy New Year, ${n}!`, message: n => `Here's to new beginnings, fresh dreams, and infinite possibilities! May this year bring you boundless joy, deep love, and the courage to chase every dream. The best is yet to come, ${n}. Cheers to an amazing year ahead! 🎊🥂` },
+            '01-26': { name: "Republic Day", animation: 'confetti', colors: { primary: '#ff9933', secondary: '#138808', accent: '#ffffff' }, greeting: n => `Jai Hind, ${n}!`, message: n => `Happy Republic Day! On this day our great Constitution came to life giving us the pillars of Justice, Liberty, Equality, and Fraternity. Let's honour the heroes who shaped our nation. 🇮🇳` },
+            '02-14': { name: "Valentine's Day", animation: 'hearts', colors: { primary: '#ff1744', secondary: '#f50057', accent: '#ffd700' }, greeting: n => `My Dearest ${n}`, message: n => `On this day that celebrates love in all its beauty, here's a little reminder: you are deeply loved and endlessly appreciated. Every moment becomes brighter with you in it. Happy Valentine's Day, sweetheart 💕` },
+            '03-08': { name: "International Women's Day", animation: 'sparkles', colors: { primary: '#9b59b6', secondary: '#e91e63', accent: '#ffd700' }, greeting: n => `To the incredible ${n}`, message: n => `Happy International Women's Day! Today and every day we celebrate the strength, grace, resilience, and brilliance of women everywhere. You inspire the world just by being you, ${n}. Keep breaking barriers! 💜✨` },
+            '03-17': { name: "St. Patrick's Day", animation: 'sparkles', colors: { primary: '#00a86b', secondary: '#228b22', accent: '#ffd700' }, greeting: n => `Lucky ${n}!`, message: n => `Happy St. Patrick's Day! May your pockets be heavy and your heart be light. May good luck pursue you each morning and night. Sláinte! 🍀` },
+            '04-22': { name: "Earth Day", animation: 'sparkles', colors: { primary: '#2ecc71', secondary: '#3498db', accent: '#27ae60' }, greeting: n => `Dear ${n}`, message: n => `Happy Earth Day! 🌍 Our planet is beautiful, fragile, and irreplaceable. Let's cherish and protect this incredible home we share. Even small actions create mighty ripples. Thank you for caring!` },
+            '05-01': { name: "May Day", animation: 'confetti', colors: { primary: '#e74c3c', secondary: '#c0392b', accent: '#f39c12' }, greeting: n => `Dear ${n}`, message: n => `Happy International Workers' Day! Today we honour every hand that builds, every mind that creates, and every heart that serves. Your work matters. You matter. Solidarity forever! ✊` },
+            '07-04': { name: "Independence Day (US)", animation: 'fireworks', colors: { primary: '#002868', secondary: '#bf0a30', accent: '#ffffff' }, greeting: n => `Happy 4th, ${n}!`, message: n => `Happy Independence Day! Let freedom ring from coast to coast. May the spirit of liberty, courage, and unity fill your heart today and always. 🇺🇸🎆` },
+            '08-15': { name: "Indian Independence Day", animation: 'confetti', colors: { primary: '#ff9933', secondary: '#138808', accent: '#000080' }, greeting: n => `Vande Mataram, ${n}!`, message: n => `Happy Independence Day! Let us remember the sacrifice of our freedom fighters and celebrate the spirit of India. May our tricolour always soar high. Jai Hind! 🇮🇳` },
+            '10-02': { name: "Gandhi Jayanti", animation: 'sparkles', colors: { primary: '#f5f5dc', secondary: '#d4a574', accent: '#8b7355' }, greeting: n => `Dear ${n}`, message: n => `On Gandhi Jayanti, let us reflect on Bapu's timeless message of truth, non-violence, and compassion. "Be the change you wish to see in the world." 🕊️` },
+            '10-31': { name: "Halloween", animation: 'sparkles', colors: { primary: '#ff6600', secondary: '#800080', accent: '#00ff00' }, greeting: n => `Boo, ${n}! 👻`, message: n => `Happy Halloween! May your night be filled with just the right amount of thrills, chills, and way too much candy. Stay spooky! 🎃🦇` },
+            '11-14': { name: "Children's Day", animation: 'confetti', colors: { primary: '#ff6b6b', secondary: '#feca57', accent: '#48dbfb' }, greeting: n => `Happy Children's Day, ${n}!`, message: n => `On Chacha Nehru's birthday, we celebrate the joy, curiosity, and wonder of childhood! Never lose the child within you. 🌈` },
+            '12-25': { name: "Christmas", animation: 'snow', colors: { primary: '#c41e3a', secondary: '#0f8644', accent: '#ffd700' }, greeting: n => `Merry Christmas, ${n}!`, message: n => `Wishing you a Christmas filled with warmth, love, and the magic that makes this season sparkle! You deserve all the joy in the world! 🎄✨🎁` },
+            '12-31': { name: "New Year's Eve", animation: 'fireworks', colors: { primary: '#ffd700', secondary: '#c0392b', accent: '#9b59b6' }, greeting: n => `Cheers, ${n}!`, message: n => `As the clock strikes midnight, let go of what was and embrace what will be! Here's to an extraordinary new chapter! 🥂🎆` }
+        };
+
+        const variableOccasions2025 = {
+            '03-14': { name: "Holi", animation: 'confetti', colors: { primary: '#ff0080', secondary: '#00bfff', accent: '#ffff00' }, greeting: n => `Happy Holi, ${n}!`, message: n => `Let the colours of Holi paint your life with joy, laughter, and unforgettable memories! Bura na mano, Holi hai! 🎨🌈💜` },
+            '03-31': { name: "Eid al-Fitr", animation: 'lanterns', colors: { primary: '#006633', secondary: '#c5a02c', accent: '#ffffff' }, greeting: n => `Eid Mubarak, ${n}!`, message: n => `May this blessed day bring you peace, prosperity, and the warmth of loved ones. 🌙✨` },
+            '04-06': { name: "Ram Navami", animation: 'sparkles', colors: { primary: '#ff9933', secondary: '#ff6600', accent: '#ffd700' }, greeting: n => `Jai Shri Ram, ${n}!`, message: n => `Happy Ram Navami! May Lord Rama's blessings of righteousness, courage, and devotion fill your life. 🙏✨` },
+            '04-10': { name: "Mahavir Jayanti", animation: 'sparkles', colors: { primary: '#ffd700', secondary: '#ff8c00', accent: '#ffffff' }, greeting: n => `Dear ${n}`, message: n => `Happy Mahavir Jayanti! May Lord Mahavira's teachings of ahimsa, truth, and compassion illuminate your path. 🙏` },
+            '04-13': { name: "Baisakhi", animation: 'confetti', colors: { primary: '#ff9933', secondary: '#0033cc', accent: '#ffd700' }, greeting: n => `Happy Baisakhi, ${n}!`, message: n => `As the harvest season arrives, may your life be blessed with abundance, joy, and new beginnings! 🌾💛` },
+            '04-18': { name: "Good Friday", animation: 'sparkles', colors: { primary: '#4a0e4e', secondary: '#800020', accent: '#c0c0c0' }, greeting: n => `Dear ${n}`, message: n => `On this solemn and sacred day, may you find peace, reflection, and renewed hope. 🙏✝️` },
+            '04-20': { name: "Easter", animation: 'sparkles', colors: { primary: '#ff69b4', secondary: '#98fb98', accent: '#ffd700' }, greeting: n => `Happy Easter, ${n}!`, message: n => `May this day of renewal and hope bring you joy that blooms like spring flowers! 🐣🌷✨` },
+            '05-12': { name: "Mother's Day", animation: 'hearts', colors: { primary: '#ff69b4', secondary: '#ff1493', accent: '#ffd700' }, greeting: n => `Dearest ${n}`, message: n => `Happy Mother's Day! To the one whose love is the foundation of everything beautiful — thank you for every sacrifice, every hug, every prayer. 💐❤️` },
+            '06-15': { name: "Father's Day", animation: 'confetti', colors: { primary: '#1e3a5f', secondary: '#4682b4', accent: '#ffd700' }, greeting: n => `Dear ${n}`, message: n => `Happy Father's Day! To the pillar of strength, the quiet hero — thank you for everything you do. 🏆💙` },
+            '08-16': { name: "Raksha Bandhan", animation: 'sparkles', colors: { primary: '#ff6b6b', secondary: '#ffd93d', accent: '#6bcb77' }, greeting: n => `Dear ${n}`, message: n => `Happy Raksha Bandhan! Celebrating the sacred bond of love and protection between siblings. 🧵💛` },
+            '08-27': { name: "Janmashtami", animation: 'sparkles', colors: { primary: '#1a237e', secondary: '#ffd700', accent: '#e91e63' }, greeting: n => `Happy Janmashtami, ${n}!`, message: n => `Jai Shri Krishna! May the divine blessings of Lord Krishna fill your life with love, joy, and wisdom. 🦚🪈✨` },
+            '10-02': { name: "Dussehra", animation: 'fireworks', colors: { primary: '#ff4500', secondary: '#ff8c00', accent: '#ffd700' }, greeting: n => `Happy Dussehra, ${n}!`, message: n => `Happy Vijaya Dashami! May good always triumph over evil in your life. Victory to you! 🏹🔥` },
+            '10-20': { name: "Diwali", animation: 'diya', colors: { primary: '#ff6b35', secondary: '#f7931e', accent: '#ffd700' }, greeting: n => `Shubh Diwali, ${n}!`, message: n => `May the festival of lights illuminate every corner of your life with happiness, prosperity, and good health! Shubh Deepawali! 🪔✨🎇` },
+            '11-01': { name: "Govardhan Puja", animation: 'diya', colors: { primary: '#ff6b35', secondary: '#f7931e', accent: '#ffd700' }, greeting: n => `Dear ${n}`, message: n => `Happy Govardhan Puja! May Lord Krishna's blessings shower upon you and your family. 🪔🙏` },
+            '11-05': { name: "Guru Nanak Jayanti", animation: 'lanterns', colors: { primary: '#ff9933', secondary: '#0033cc', accent: '#ffffff' }, greeting: n => `Waheguru Ji Ka Khalsa, ${n}`, message: n => `Happy Gurpurab! May Guru Nanak Dev Ji's teachings of equality, compassion, and selfless service guide our lives. 🙏✨` }
+        };
+
+        const allOccasions = { ...fixedOccasions, ...variableOccasions2025 };
+
+        const defaultOccasion = {
+            name: "Your Special Day",
+            animation: 'sparkles',
+            colors: { primary: '#667eea', secondary: '#764ba2', accent: '#f093fb' },
+            greeting: n => `Hey ${n}! ✨`,
+            message: n => `Today is YOUR special day! Someone thought of you and wanted to make you smile. You are appreciated more than you know, valued beyond measure, and you make the world infinitely better just by being in it. Keep shining, ${n}! 🌟💫`
+        };
+
+        const relationshipTones = {
+            friend: { label: '🤝 Friend' },
+            partner: { label: '💕 Partner' },
+            family: { label: '👨‍👩‍👧 Family' },
+            colleague: { label: '💼 Colleague' },
+            general: { label: '🌟 General' }
+        };
+
+        // ══════════════════════════════════════════
+        // UTILITIES
+        // ══════════════════════════════════════════
+        function encodeShareData(data) {
+            try { return btoa(unescape(encodeURIComponent(JSON.stringify(data)))); }
+            catch { return ''; }
+        }
+        function decodeShareData(encoded) {
+            try { return JSON.parse(decodeURIComponent(escape(atob(encoded)))); }
+            catch { return null; }
+        }
+        function getTodayKey() {
+            const d = new Date();
+            return `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+        function getOccasionForDate(dateStr) {
+            if (!dateStr) return null;
+            const d = new Date(dateStr);
+            if (isNaN(d)) return null;
+            const key = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            return allOccasions[key] || null;
+        }
+        function sanitizeName(name) {
+            return name.replace(/[<>"'&]/g, '').trim().substring(0, 50);
+        }
+        function sanitizeNote(note) {
+            return note.replace(/[<>"'&]/g, '').trim().substring(0, 300);
+        }
+
+        // ══════════════════════════════════════════
+        // STAR FIELD
+        // ══════════════════════════════════════════
+        function StarField() {
+            const stars = useMemo(() => Array.from({ length: 80 }, (_, i) => ({
+                id: i,
+                w: Math.random() * 2.5 + 0.5,
+                x: Math.random() * 100,
+                y: Math.random() * 100,
+                delay: Math.random() * 4,
+                cls: ['twinkle-slow', 'twinkle-mid', 'twinkle-fast'][Math.floor(Math.random() * 3)]
+            })), []);
+            return (
+                <div className="stars-canvas" aria-hidden="true">
+                    {stars.map(s => (
+                        <div key={s.id} className={`star-dot ${s.cls}`}
+                            style={{ width: s.w + 'px', height: s.w + 'px', left: s.x + '%', top: s.y + '%', animationDelay: s.delay + 's' }} />
+                    ))}
+                </div>
+            );
+        }
+
+        // ══════════════════════════════════════════
+        // ANIMATION COMPONENTS
+        // ══════════════════════════════════════════
+        function FloatingHearts() {
+            const [particles, setParticles] = useState([]);
+            const idRef = useRef(0);
+            const emojis = ['❤️', '💕', '💖', '💗', '💝', '💘', '🩷'];
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setParticles(prev => {
+                        const next = prev.length >= 25 ? prev.slice(1) : [...prev];
+                        next.push({ id: idRef.current++, left: Math.random() * 95 + 2.5, emoji: emojis[Math.floor(Math.random() * emojis.length)], size: 1.2 + Math.random() * 1.2, duration: 4 + Math.random() * 3 });
+                        return next;
+                    });
+                }, 400);
+                return () => clearInterval(interval);
+            }, []);
+            return (
+                <div className="animation-layer" aria-hidden="true">
+                    {particles.map(p => <div key={p.id} className="heart-particle" style={{ left: p.left + '%', fontSize: p.size + 'rem', animationDuration: p.duration + 's' }}>{p.emoji}</div>)}
+                </div>
+            );
+        }
+
+        function ConfettiAnimation() {
+            const pieces = useMemo(() => {
+                const colors = ['#ff1744', '#ffd700', '#00e5ff', '#76ff03', '#ff9100', '#d500f9', '#ffffff'];
+                return Array.from({ length: 60 }, (_, i) => ({ id: i, left: Math.random() * 100, delay: Math.random() * 4, color: colors[Math.floor(Math.random() * colors.length)], width: 6 + Math.random() * 8, height: 10 + Math.random() * 10, duration: 3 + Math.random() * 3 }));
+            }, []);
+            return (
+                <div className="animation-layer" aria-hidden="true">
+                    {pieces.map(p => <div key={p.id} className="confetti-piece" style={{ left: p.left + '%', background: p.color, width: p.width + 'px', height: p.height + 'px', animationDelay: p.delay + 's', animationDuration: p.duration + 's' }} />)}
+                </div>
+            );
+        }
+
+        function SnowAnimation() {
+            const [flakes, setFlakes] = useState([]);
+            const idRef = useRef(0);
+            const chars = ['❄', '❅', '❆', '✧', '•'];
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setFlakes(prev => {
+                        const next = prev.length >= 40 ? prev.slice(1) : [...prev];
+                        next.push({ id: idRef.current++, left: Math.random() * 100, char: chars[Math.floor(Math.random() * chars.length)], size: 0.7 + Math.random() * 1, duration: 5 + Math.random() * 5 });
+                        return next;
+                    });
+                }, 250);
+                return () => clearInterval(interval);
+            }, []);
+            return (
+                <div className="animation-layer" aria-hidden="true">
+                    {flakes.map(f => <div key={f.id} className="snowflake" style={{ left: f.left + '%', fontSize: f.size + 'rem', animationDuration: f.duration + 's' }}>{f.char}</div>)}
+                </div>
+            );
+        }
+
+        function FireworksAnimation() {
+            const [bursts, setBursts] = useState([]);
+            const idRef = useRef(0);
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    const cx = 10 + Math.random() * 80;
+                    const cy = 10 + Math.random() * 50;
+                    const colors = ['#ff1744', '#ffd700', '#00e5ff', '#76ff03', '#ff9100', '#d500f9'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const count = 20 + Math.floor(Math.random() * 15);
+                    const newP = Array.from({ length: count }, (_, i) => {
+                        const angle = (Math.PI * 2 * i) / count;
+                        const vel = 40 + Math.random() * 80;
+                        return { id: idRef.current++, cx, cy, dx: Math.cos(angle) * vel, dy: Math.sin(angle) * vel, color, duration: 1.2 + Math.random() * 1 };
+                    });
+                    setBursts(prev => {
+                        const combined = [...prev, ...newP];
+                        return combined.length > 120 ? combined.slice(combined.length - 120) : combined;
+                    });
+                }, 1200);
+                return () => clearInterval(interval);
+            }, []);
+            return (
+                <div className="animation-layer" aria-hidden="true">
+                    {bursts.map(p => <div key={p.id} className="fw-particle" style={{ left: p.cx + '%', top: p.cy + '%', background: p.color, '--dx': p.dx + 'px', '--dy': p.dy + 'px', animationDuration: p.duration + 's', boxShadow: `0 0 6px ${p.color}` }} />)}
+                </div>
+            );
+        }
+
+        function DiyaAnimation() {
+            const diyas = useMemo(() => Array.from({ length: 10 }, (_, i) => ({ id: i, delay: i * 0.3 })), []);
+            return (
+                <div className="diya-row" aria-hidden="true">
+                    {diyas.map(d => <div key={d.id} className="diya-item" style={{ animationDelay: d.delay + 's' }}>🪔</div>)}
+                </div>
+            );
+        }
+
+        function SparkleAnimation() {
+            const [sparkles, setSparkles] = useState([]);
+            const idRef = useRef(0);
+            const chars = ['✨', '⭐', '💫', '✧', '🌟'];
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setSparkles(prev => {
+                        const next = prev.length >= 30 ? prev.slice(1) : [...prev];
+                        next.push({ id: idRef.current++, left: Math.random() * 95, top: Math.random() * 90, char: chars[Math.floor(Math.random() * chars.length)], size: 0.9 + Math.random() * 1.2, duration: 2 + Math.random() * 2 });
+                        return next;
+                    });
+                }, 350);
+                return () => clearInterval(interval);
+            }, []);
+            return (
+                <div className="animation-layer" aria-hidden="true">
+                    {sparkles.map(s => <div key={s.id} className="sparkle-particle" style={{ left: s.left + '%', top: s.top + '%', fontSize: s.size + 'rem', animationDuration: s.duration + 's' }}>{s.char}</div>)}
+                </div>
+            );
+        }
+
+        function LanternAnimation() {
+            const [lanterns, setLanterns] = useState([]);
+            const idRef = useRef(0);
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setLanterns(prev => {
+                        const next = prev.length >= 12 ? prev.slice(1) : [...prev];
+                        next.push({ id: idRef.current++, left: 5 + Math.random() * 90, duration: 7 + Math.random() * 5, emoji: ['🏮', '🪔', '🌙'][Math.floor(Math.random() * 3)] });
+                        return next;
+                    });
+                }, 1500);
+                return () => clearInterval(interval);
+            }, []);
+            return (
+                <div className="animation-layer" aria-hidden="true">
+                    {lanterns.map(l => <div key={l.id} className="lantern-particle" style={{ left: l.left + '%', animationDuration: l.duration + 's' }}>{l.emoji}</div>)}
+                </div>
+            );
+        }
+
+        function AnimationRenderer({ type }) {
+            switch (type) {
+                case 'hearts': return <FloatingHearts />;
+                case 'confetti': return <ConfettiAnimation />;
+                case 'snow': return <SnowAnimation />;
+                case 'fireworks': return <FireworksAnimation />;
+                case 'diya': return <><DiyaAnimation /><SparkleAnimation /></>;
+                case 'sparkles': return <SparkleAnimation />;
+                case 'lanterns': return <><LanternAnimation /><SparkleAnimation /></>;
+                default: return <SparkleAnimation />;
+            }
+        }
+
+        // ══════════════════════════════════════════
+        // AD OVERLAY COMPONENT
+        // ══════════════════════════════════════════
+        function AdOverlay({ onComplete }) {
+            const { adConfig } = useAd();
+            const [skipTimer, setSkipTimer] = useState(5);
+            const [canSkip, setCanSkip] = useState(false);
+            const [videoReady, setVideoReady] = useState(false);
+            const [videoError, setVideoError] = useState(false);
+            const [progress, setProgress] = useState(0);
+            const videoRef = useRef(null);
+            const timerRef = useRef(null);
+            const errorTimerRef = useRef(null);
+
+            // Record ad view
+            useEffect(() => {
+                AdStats.recordView();
+                markAdSeenThisSession();
+            }, []);
+
+            // Skip countdown timer
+            useEffect(() => {
+                timerRef.current = setInterval(() => {
+                    setSkipTimer(prev => {
+                        if (prev <= 1) {
+                            clearInterval(timerRef.current);
+                            setCanSkip(true);
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000);
+                return () => clearInterval(timerRef.current);
+            }, []);
+
+            // Auto-skip if video fails to load within 5s
+            useEffect(() => {
+                errorTimerRef.current = setTimeout(() => {
+                    if (!videoReady) {
+                        setVideoError(true);
+                        setTimeout(() => onComplete(), 1000);
+                    }
+                }, 8000);
+                return () => clearTimeout(errorTimerRef.current);
+            }, [videoReady, onComplete]);
+
+            function handleVideoReady() {
+                setVideoReady(true);
+                clearTimeout(errorTimerRef.current);
+                if (videoRef.current) {
+                    videoRef.current.play().catch(() => {});
+                }
+            }
+
+            function handleVideoError() {
+                setVideoError(true);
+                setTimeout(() => onComplete(), 1000);
+            }
+
+            function handleTimeUpdate() {
+                if (videoRef.current) {
+                    const pct = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+                    setProgress(pct);
+                }
+            }
+
+            function handleVideoEnd() {
+                onComplete();
+            }
+
+            function handleSkip() {
+                if (videoRef.current) {
+                    videoRef.current.pause();
+                }
+                onComplete();
+            }
+
+            function handleSponsorClick() {
+                AdStats.recordClick();
+                window.open(adConfig.clickUrl, '_blank', 'noopener,noreferrer');
+            }
+
+            if (videoError) {
+                return (
+                    <div className="ad-overlay" role="dialog" aria-label="Loading your surprise">
+                        <div className="ad-container">
+                            <div className="ad-preparing">Preparing your surprise...</div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="ad-overlay" role="dialog" aria-label="Sponsor message">
+                    <div className="ad-container">
+                        <div className="ad-video-wrapper">
+                            {!videoReady && (
+                                <div className="ad-video-loader">
+                                    <div style={{ textAlign: 'center' }}>
+                                        <div className="ad-loader-spinner"></div>
+                                        <div>Loading...</div>
+                                    </div>
+                                </div>
+                            )}
+                            <video
+                                ref={videoRef}
+                                className="ad-video"
+                                src={adConfig.videoUrl}
+                                playsInline
+                                onCanPlay={handleVideoReady}
+                                onError={handleVideoError}
+                                onTimeUpdate={handleTimeUpdate}
+                                onEnded={handleVideoEnd}
+                                style={{ opacity: videoReady ? 1 : 0 }}
+                            />
+                        </div>
+
+                        {videoReady && (
+                            <div className="ad-progress-bar">
+                                <div className="ad-progress-fill" style={{ width: progress + '%' }} />
+                            </div>
+                        )}
+
+                        <div className="ad-bottom-row">
+                            <div className="ad-sponsor-info">
+                                <span className="ad-sponsor-label">Sponsored by</span>
+                                <button className="ad-sponsor-link" onClick={handleSponsorClick} aria-label={`Visit ${adConfig.sponsorName}`}>
+                                    {adConfig.sponsorName} →
+                                </button>
+                            </div>
+                            <div className="ad-skip-area">
+                                {canSkip ? (
+                                    <button className="ad-skip-btn" onClick={handleSkip} aria-label="Skip advertisement">
+                                        Skip Ad →
+                                    </button>
+                                ) : (
+                                    <span className="ad-skip-timer">Skip in {skipTimer}s</span>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="ad-preparing">Your surprise is being prepared ✨</div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ══════════════════════════════════════════
+        // REVEAL SEQUENCE
+        // ══════════════════════════════════════════
+        function RevealSequence({ onComplete }) {
+            const [phase, setPhase] = useState('envelope');
+            const [count, setCount] = useState(3);
+
+            useEffect(() => {
+                const t = setTimeout(() => setPhase('countdown'), 1800);
+                return () => clearTimeout(t);
+            }, []);
+
+            useEffect(() => {
+                if (phase !== 'countdown') return;
+                if (count === 0) {
+                    const t = setTimeout(() => onComplete(), 400);
+                    return () => clearTimeout(t);
+                }
+                const t = setTimeout(() => setCount(c => c - 1), 800);
+                return () => clearTimeout(t);
+            }, [phase, count, onComplete]);
+
+            if (phase === 'envelope') {
+                return (
+                    <div className="reveal-overlay" role="status" aria-live="polite" aria-label="Opening your surprise">
+                        <div className="reveal-envelope">
+                            <span className="envelope-icon">💌</span>
+                            <div className="reveal-text">Opening your surprise...</div>
+                        </div>
+                    </div>
+                );
+            }
+            if (phase === 'countdown' && count > 0) {
+                return (
+                    <div className="reveal-overlay" role="status" aria-live="polite" aria-label={`${count}`}>
+                        <div className="countdown-number" key={count}>{count}</div>
+                    </div>
+                );
+            }
+            return null;
+        }
+
+        // ══════════════════════════════════════════
+        // STATS PAGE
+        // ══════════════════════════════════════════
+        function StatsPage() {
+            const [stats, setStats] = useState(AdStats.getStats());
+
+            function handleReset() {
+                if (confirm('Reset all ad stats? This cannot be undone.')) {
+                    AdStats.reset();
+                    setStats(AdStats.getStats());
+                }
+            }
+
+            function handleBack() {
+                window.location.href = window.location.pathname;
+            }
+
+            function formatDate(iso) {
+                if (!iso) return '—';
+                try { return new Date(iso).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+                catch { return iso; }
+            }
+
+            return (
+                <div className="stats-page">
+                    <div className="stats-container">
+                        <h1 className="stats-title">📊 Ad Stats</h1>
+
+                        <div className="stat-card">
+                            <span className="stat-label">Total Ad Views</span>
+                            <span className="stat-value">{stats.views}</span>
+                        </div>
+                        <div className="stat-card">
+                            <span className="stat-label">Sponsor Clicks</span>
+                            <span className="stat-value">{stats.clicks}</span>
+                        </div>
+                        <div className="stat-card">
+                            <span className="stat-label">Click-through Rate</span>
+                            <span className="stat-value">{stats.views > 0 ? ((stats.clicks / stats.views) * 100).toFixed(1) + '%' : '—'}</span>
+                        </div>
+                        <div className="stat-card">
+                            <span className="stat-label">First Ad View</span>
+                            <span className="stat-value" style={{ fontSize: '0.9rem' }}>{formatDate(stats.firstView)}</span>
+                        </div>
+                        <div className="stat-card">
+                            <span className="stat-label">Last Ad View</span>
+                            <span className="stat-value" style={{ fontSize: '0.9rem' }}>{formatDate(stats.lastView)}</span>
+                        </div>
+
+                        <div className="stats-note">
+                            ⚠️ These stats are stored locally on this device only.
+                            For aggregate analytics across all users, check your
+                            hosting platform's dashboard (Netlify / Vercel / GitHub Pages analytics).
+                        </div>
+
+                        <button className="stats-back-btn" onClick={handleBack}>← Back to App</button>
+                        <button className="stats-reset-btn" onClick={handleReset}>Reset Stats</button>
+                    </div>
+                </div>
+            );
+        }
+
+        // ══════════════════════════════════════════
+        // MAIN APP
+        // ══════════════════════════════════════════
+        function App() {
+            const { setTheme } = useTheme();
+            const { adConfig, adLoaded } = useAd();
+
+            // Check if stats page
+            const params = useMemo(() => new URLSearchParams(window.location.search), []);
+            const isStatsPage = params.get('stats') === 'true';
+
+            if (isStatsPage) {
+                return <StatsPage />;
+            }
+
+            const [step, setStep] = useState('input');
+            const [mode, setMode] = useState('send');
+            const [recipientName, setRecipientName] = useState('');
+            const [senderName, setSenderName] = useState('');
+            const [date, setDate] = useState('');
+            const [relationship, setRelationship] = useState('general');
+            const [customNote, setCustomNote] = useState('');
+            const [occasion, setOccasion] = useState(null);
+            const [showAd, setShowAd] = useState(false);
+            const [showReveal, setShowReveal] = useState(false);
+            const [shareLink, setShareLink] = useState('');
+            const [copied, setCopied] = useState(false);
+            const [errors, setErrors] = useState({});
+            const [pendingRevealData, setPendingRevealData] = useState(null);
+
+            // Check URL for shared surprise
+            useEffect(() => {
+                const shareData = params.get('s');
+                if (shareData) {
+                    const decoded = decodeShareData(shareData);
+                    if (decoded && decoded.name && decoded.date) {
+                        setRecipientName(decoded.name);
+                        setDate(decoded.date);
+                        setSenderName(decoded.sender || '');
+                        setCustomNote(decoded.note || '');
+                        setRelationship(decoded.rel || 'general');
+                        setPendingRevealData(decoded);
+                    }
+                }
+            }, []);
+
+            // Auto-trigger reveal for shared links after ad config loads
+            useEffect(() => {
+                if (!pendingRevealData || !adLoaded) return;
+                const timer = setTimeout(() => {
+                    startRevealFlow(pendingRevealData);
+                    setPendingRevealData(null);
+                }, 400);
+                return () => clearTimeout(timer);
+            }, [pendingRevealData, adLoaded]);
+
+            const todayKey = useMemo(() => getTodayKey(), []);
+            const todayOccasion = useMemo(() => allOccasions[todayKey], [todayKey]);
+
+            function validate() {
+                const errs = {};
+                const cleanName = sanitizeName(recipientName);
+                if (!cleanName) errs.name = 'Please enter a name';
+                if (cleanName.length > 50) errs.name = 'Name is too long (max 50 characters)';
+                if (!date) errs.date = 'Please select a date';
+                else {
+                    const d = new Date(date);
+                    if (isNaN(d)) errs.date = 'Invalid date';
+                    else {
+                        const year = d.getFullYear();
+                        if (year < 2000 || year > 2100) errs.date = 'Please select a reasonable date';
+                    }
+                }
+                if (mode === 'send') {
+                    const cleanSender = sanitizeName(senderName);
+                    if (!cleanSender) errs.sender = 'Please enter your name';
+                }
+                setErrors(errs);
+                return Object.keys(errs).length === 0;
+            }
+
+            function shouldShowAd() {
+                return adConfig && adConfig.enabled && adConfig.videoUrl && !hasSeenAdThisSession();
+            }
+
+            function startRevealFlow(overrideData) {
+                const data = overrideData || {
+                    name: sanitizeName(recipientName),
+                    date,
+                    sender: sanitizeName(senderName),
+                    note: sanitizeNote(customNote),
+                    rel: relationship
+                };
+
+                const occ = getOccasionForDate(data.date) || defaultOccasion;
+                setTheme(occ.colors);
+                setOccasion(occ);
+                setRecipientName(data.name);
+                setSenderName(data.sender || '');
+                setCustomNote(data.note || '');
+
+                if (shouldShowAd()) {
+                    setShowAd(true);
+                } else {
+                    setShowReveal(true);
+                }
+            }
+
+            function handleSubmit() {
+                if (!validate()) return;
+                startRevealFlow();
+            }
+
+            function handleAdComplete() {
+                setShowAd(false);
+                setShowReveal(true);
+            }
+
+            function handleRevealComplete() {
+                setShowReveal(false);
+                setStep('surprise');
+            }
+
+            function generateShareLink() {
+                const data = {
+                    name: sanitizeName(recipientName),
+                    date,
+                    sender: sanitizeName(senderName),
+                    note: sanitizeNote(customNote),
+                    rel: relationship
+                };
+                const encoded = encodeShareData(data);
+                const url = `${window.location.origin}${window.location.pathname}?s=${encoded}`;
+                setShareLink(url);
+            }
+
+            function handleCopy() {
+                navigator.clipboard.writeText(shareLink).then(() => {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2500);
+                }).catch(() => {
+                    const el = document.createElement('textarea');
+                    el.value = shareLink;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2500);
+                });
+            }
+
+            function handleReset() {
+                setStep('input');
+                setRecipientName('');
+                setSenderName('');
+                setDate('');
+                setRelationship('general');
+                setCustomNote('');
+                setOccasion(null);
+                setShareLink('');
+                setCopied(false);
+                setErrors({});
+                setTheme({ primary: '#667eea', secondary: '#764ba2', accent: '#f093fb' });
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+
+            function handleTodayBanner() {
+                const today = new Date();
+                setDate(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`);
+            }
+
+            return (
+                <>
+                    <StarField />
+                    <div className="gradient-orb orb-1" aria-hidden="true" />
+                    <div className="gradient-orb orb-2" aria-hidden="true" />
+                    <div className="gradient-orb orb-3" aria-hidden="true" />
+
+                    {showAd && <AdOverlay onComplete={handleAdComplete} />}
+                    {showReveal && <RevealSequence onComplete={handleRevealComplete} />}
+
+                    <div className="app-container">
+                        <main id="main-content" className="content">
+                            {step === 'input' ? (
+                                <>
+                                    <h1 className="logo">Everyday Surprise</h1>
+                                    <p className="tagline">Create magical moments for the people you love</p>
+
+                                    {todayOccasion && (
+                                        <div className="today-banner" onClick={handleTodayBanner} role="button" tabIndex={0}
+                                            aria-label={`Today is ${todayOccasion.name}. Click to select today's date.`}
+                                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleTodayBanner(); }}>
+                                            <div className="today-banner-label">Today's Occasion</div>
+                                            <div className="today-banner-occasion">{todayOccasion.name} ✨</div>
+                                        </div>
+                                    )}
+
+                                    <div className="mode-tabs" role="tablist" aria-label="Surprise mode">
+                                        <button className={`mode-tab ${mode === 'send' ? 'active' : ''}`} onClick={() => setMode('send')} role="tab" aria-selected={mode === 'send'}>🎁 Send to Someone</button>
+                                        <button className={`mode-tab ${mode === 'self' ? 'active' : ''}`} onClick={() => setMode('self')} role="tab" aria-selected={mode === 'self'}>🌟 For Myself</button>
+                                    </div>
+
+                                    <div className="form-container" role="tabpanel">
+                                        <div className="input-group">
+                                            <label className="input-label" htmlFor="date-input">
+                                                <span className="label-icon">📅</span> Select the Date
+                                            </label>
+                                            <input id="date-input" type="date" className={`input-field ${errors.date ? 'error' : ''}`}
+                                                value={date} onChange={e => { setDate(e.target.value); setErrors(p => ({ ...p, date: '' })); }}
+                                                min="2000-01-01" max="2100-12-31" aria-invalid={!!errors.date} />
+                                            {errors.date && <div className="error-text" role="alert">{errors.date}</div>}
+                                            {date && getOccasionForDate(date) && (
+                                                <div style={{ marginTop: 8, fontFamily: "'Cormorant Garamond', serif", fontSize: '0.9rem', color: 'var(--accent)' }}>
+                                                    🎉 {getOccasionForDate(date).name} detected!
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="input-group">
+                                            <label className="input-label" htmlFor="name-input">
+                                                <span className="label-icon">✨</span> {mode === 'send' ? "Recipient's Name" : "Your Name"}
+                                            </label>
+                                            <input id="name-input" type="text" className={`input-field ${errors.name ? 'error' : ''}`}
+                                                placeholder={mode === 'send' ? "Their beautiful name..." : "Your beautiful name..."}
+                                                value={recipientName} onChange={e => { setRecipientName(e.target.value); setErrors(p => ({ ...p, name: '' })); }}
+                                                maxLength={50} aria-invalid={!!errors.name} />
+                                            {errors.name && <div className="error-text" role="alert">{errors.name}</div>}
+                                        </div>
+
+                                        {mode === 'send' && (
+                                            <>
+                                                <div className="input-group">
+                                                    <label className="input-label" htmlFor="sender-input">
+                                                        <span className="label-icon">💌</span> Your Name (Sender)
+                                                    </label>
+                                                    <input id="sender-input" type="text" className={`input-field ${errors.sender ? 'error' : ''}`}
+                                                        placeholder="Who is this surprise from?"
+                                                        value={senderName} onChange={e => { setSenderName(e.target.value); setErrors(p => ({ ...p, sender: '' })); }}
+                                                        maxLength={50} aria-invalid={!!errors.sender} />
+                                                    {errors.sender && <div className="error-text" role="alert">{errors.sender}</div>}
+                                                </div>
+
+                                                <div className="input-group">
+                                                    <label className="input-label" htmlFor="rel-select">
+                                                        <span className="label-icon">🤝</span> Relationship
+                                                    </label>
+                                                    <select id="rel-select" className="select-field" value={relationship} onChange={e => setRelationship(e.target.value)}>
+                                                        {Object.entries(relationshipTones).map(([key, val]) => (
+                                                            <option key={key} value={key}>{val.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+                                                <div className="input-group">
+                                                    <label className="input-label" htmlFor="note-input">
+                                                        <span className="label-icon">📝</span> Personal Note (Optional)
+                                                    </label>
+                                                    <textarea id="note-input" className="textarea-field"
+                                                        placeholder="Add a personal touch... (optional)"
+                                                        value={customNote} onChange={e => setCustomNote(e.target.value)}
+                                                        maxLength={300} />
+                                                    <div className={`char-counter ${customNote.length > 270 ? 'warn' : ''}`}>
+                                                        {customNote.length}/300
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        <button className="primary-btn" onClick={handleSubmit}
+                                            aria-label={mode === 'send' ? "Create and preview the surprise" : "Reveal your surprise"}>
+                                            {mode === 'send' ? '🎁 Create Surprise' : '✨ Reveal My Surprise'}
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="surprise-container" role="region" aria-label="Your surprise message">
+                                    <div style={{ textAlign: 'center' }}>
+                                        <div className="occasion-badge">{occasion.name}</div>
+                                    </div>
+                                    <h2 className="surprise-header">{occasion.greeting(sanitizeName(recipientName))}</h2>
+                                    <div className="divider" />
+                                    <div className="surprise-message">{occasion.message(sanitizeName(recipientName))}</div>
+
+                                    {customNote && (
+                                        <div className="custom-note">{sanitizeNote(customNote)}"</div>
+                                    )}
+                                    {senderName && (
+                                        <div className="sender-tag">With love, <span className="from-name">{sanitizeName(senderName)}</span> 💕</div>
+                                    )}
+
+                                    <div className="surprise-actions">
+                                        {mode === 'send' && !shareLink && (
+                                            <button className="primary-btn" onClick={generateShareLink} style={{ maxWidth: 280 }}>
+                                                🔗 Generate Share Link
+                                            </button>
+                                        )}
+                                        <button className="secondary-btn" onClick={handleReset}>✨ Create Another</button>
+                                    </div>
+
+                                    {shareLink && (
+                                        <div className="share-box">
+                                            <div className="share-box-title">Share This Surprise</div>
+                                            <div className="share-link-row">
+                                                <input className="share-link-input" value={shareLink} readOnly
+                                                    aria-label="Shareable surprise link" onFocus={e => e.target.select()} />
+                                                <button className="copy-btn" onClick={handleCopy}>
+                                                    {copied ? '✓ Copied!' : '📋 Copy'}
+                                                </button>
+                                            </div>
+                                            {copied && <div className="copied-toast">Link copied to clipboard!</div>}
+                                        </div>
+                                    )}
+
+                                    <AnimationRenderer type={occasion.animation} />
+                                </div>
+                            )}
+                        </main>
+                    </div>
+                </>
+            );
+        }
+
+        // ══════════════════════════════════════════
+        // RENDER
+        // ══════════════════════════════════════════
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <ThemeProvider>
+                <AdProvider>
+                    <App />
+                </AdProvider>
+            </ThemeProvider>
+        );
+    </script>
+</body>
+</html>
